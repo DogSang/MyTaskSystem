@@ -16,6 +16,27 @@ namespace MyTaskSystem
         protected DelOnTaskFinish actionOnTaskFinish;
 
         /// <summary>
+        /// 任务开始后触发的事件
+        /// </summary>
+        public event DelOnTaskEvent EventOnTaskStart;
+        /// <summary>
+        /// 任务被放弃时触发的事件
+        /// </summary>
+        public event DelOnTaskEvent EventOnTaskGiveUp;
+        /// <summary>
+        /// 任务被跳过后触发的事件
+        /// </summary>
+        public event DelOnTaskEvent EventOnTaskSkip;
+        /// <summary>
+        /// 任务完成后触发的事件
+        /// </summary>
+        public event DelOnTaskEvent EventOnTaskFinish;
+        /// <summary>
+        /// 任务离开触发，包括放弃、跳过、完成
+        /// </summary>
+        public event DelOnTaskEvent EventOnTaskLeave;
+
+        /// <summary>
         /// 执行任务
         /// </summary>
         /// <param name="onTaskFinish">任务完成回调</param>
@@ -74,10 +95,25 @@ namespace MyTaskSystem
             actionOnTaskFinish?.Invoke();
         }
 
-        protected virtual void OnStart() { }
-        protected virtual void OnGiveUp() { }
-        protected virtual void OnSkip() { }
-        protected virtual void OnFinish() { }
-        protected virtual void OnLeave() { }
+        protected virtual void OnStart()
+        {
+            EventOnTaskStart?.Invoke(this);
+        }
+        protected virtual void OnGiveUp()
+        {
+            EventOnTaskGiveUp?.Invoke(this);
+        }
+        protected virtual void OnSkip()
+        {
+            EventOnTaskSkip?.Invoke(this);
+        }
+        protected virtual void OnFinish()
+        {
+            EventOnTaskFinish?.Invoke(this);
+        }
+        protected virtual void OnLeave()
+        {
+            EventOnTaskLeave?.Invoke(this);
+        }
     }
 }

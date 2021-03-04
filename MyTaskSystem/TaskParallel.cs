@@ -1,14 +1,14 @@
 ﻿
 namespace MyTaskSystem
 {
-    public class TaskSameTime : TaskBase
+    public class TaskParallel : TaskBase
     {
         //要执行的任务数组
         protected ITask[] arrTask;
         //当前等待完成任务数量
         protected int nWaitTaskCount;
 
-        public TaskSameTime(ITask[] arrTask)
+        public TaskParallel(ITask[] arrTask)
         {
             this.arrTask = arrTask;
         }
