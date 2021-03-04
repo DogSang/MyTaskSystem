@@ -1,0 +1,6 @@
+D:\Works\VS_Project\MyTaskSystem\MyTaskSystem\bin\Debug\MyTaskSystem.dll
+D:\Works\VS_Project\MyTaskSystem\MyTaskSystem\bin\Debug\MyTaskSystem.pdb
+D:\Works\VS_Project\MyTaskSystem\MyTaskSystem\obj\Debug\MyTaskSystem.csprojAssemblyReference.cache
+D:\Works\VS_Project\MyTaskSystem\MyTaskSystem\obj\Debug\MyTaskSystem.csproj.CoreCompileInputs.cache
+D:\Works\VS_Project\MyTaskSystem\MyTaskSystem\obj\Debug\MyTaskSystem.dll
+D:\Works\VS_Project\MyTaskSystem\MyTaskSystem\obj\Debug\MyTaskSystem.pdb
