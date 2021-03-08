@@ -15,38 +15,20 @@ namespace MyTaskSystem
 
         protected DelOnTaskFinish actionOnTaskFinish;
 
-        /// <summary>
-        /// 任务开始后触发的事件
-        /// </summary>
-        public event DelOnTaskEvent EventOnTaskStart;
-        /// <summary>
-        /// 任务被放弃时触发的事件
-        /// </summary>
-        public event DelOnTaskEvent EventOnTaskGiveUp;
-        /// <summary>
-        /// 任务被跳过后触发的事件
-        /// </summary>
-        public event DelOnTaskEvent EventOnTaskSkip;
-        /// <summary>
-        /// 任务完成后触发的事件
-        /// </summary>
-        public event DelOnTaskEvent EventOnTaskFinish;
-        /// <summary>
-        /// 任务离开触发，包括放弃、跳过、完成
-        /// </summary>
-        public event DelOnTaskEvent EventOnTaskLeave;
+        public TaskEventData EventData { get; protected set; }
 
         /// <summary>
         /// 执行任务
         /// </summary>
         /// <param name="onTaskFinish">任务完成回调</param>
-        public void Execute(DelOnTaskFinish onTaskFinish)
+        public void Execute(DelOnTaskFinish onTaskFinish, TaskEventData eventData = null)
         {
             if (TaskStage == EM_TaskStage.OnTask)
             {
                 TaskErrorMgr.SendTaskErrorData(this, TaskErrorMgr.EMTaskErrorType.StartWhenOnTask, null);
                 return;
             }
+            EventData += eventData;
 
             actionOnTaskFinish = onTaskFinish;
 
@@ -97,23 +79,23 @@ namespace MyTaskSystem
 
         protected virtual void OnStart()
         {
-            EventOnTaskStart?.Invoke(this);
+            EventData.OnEvent(this, TaskEventData.EMEventType.OnStart);
         }
         protected virtual void OnGiveUp()
         {
-            EventOnTaskGiveUp?.Invoke(this);
+            EventData.OnEvent(this, TaskEventData.EMEventType.OnGiveUp);
         }
         protected virtual void OnSkip()
         {
-            EventOnTaskSkip?.Invoke(this);
+            EventData.OnEvent(this, TaskEventData.EMEventType.OnSkip);
         }
         protected virtual void OnFinish()
         {
-            EventOnTaskFinish?.Invoke(this);
+            EventData.OnEvent(this, TaskEventData.EMEventType.OnFinish);
         }
         protected virtual void OnLeave()
         {
-            EventOnTaskLeave?.Invoke(this);
+            EventData.OnEvent(this, TaskEventData.EMEventType.OnLeave);
         }
     }
 }

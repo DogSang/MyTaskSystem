@@ -19,11 +19,34 @@ namespace MyTaskSystem
             /// </summary>
             Parallel,
         }
-        private class STTaskData
+        private class STTaskData :ITaskFactory
         {
             public EMTaskType eMTaskType;
             public List<STTaskData> listTaskData;
             public ITask task;
+
+            public ITask GetTask()
+            {
+                ITask tmpTask=null;
+                switch (eMTaskType)
+                {
+                    case EMTaskType.Normal:
+                        tmpTask=task;
+                        break;
+                    case EMTaskType.Queue:
+                    case EMTaskType.Parallel:
+                        List<ITask> listTmp = new List<ITask>();
+                        listTaskData?.ForEach((data) => listTmp.Add(data.GetTask()));
+
+                        if (eMTaskType == EMTaskType.Queue)
+                            tmpTask = new TaskQueue(listTmp.ToArray());
+                        else if (eMTaskType == EMTaskType.Parallel)
+                            tmpTask = new TaskParallel(listTmp.ToArray());
+                        break;
+                }
+
+                return tmpTask;
+            }
         }
 
         private List<STTaskData> listCtrlTaskData;
@@ -56,6 +79,8 @@ namespace MyTaskSystem
         /// <param name="task"></param>
         public void AddTask(ITask task)
         {
+            System.Console.WriteLine(CurCtrlTaskData.eMTaskType);
+
             if (CurCtrlTaskData.listTaskData == null)
                 CurCtrlTaskData.listTaskData = new List<STTaskData>();
 
@@ -88,7 +113,7 @@ namespace MyTaskSystem
             //当前不是队列模式
             if (CurCtrlTaskData.eMTaskType != EMTaskType.Queue) return;
             //最后一个队列不允许删除
-            if (listCtrlTaskData.Count >= 1) return;
+            if (listCtrlTaskData.Count <= 1) return;
 
             //剔除当前操作的对象，改为上一个对象
             listCtrlTaskData.RemoveAt(listCtrlTaskData.Count - 1);
@@ -116,15 +141,19 @@ namespace MyTaskSystem
         #region 实现接口
         public ITask GetTask()
         {
-            return null;
+            //取第一个，后续的递归
+            if (listCtrlTaskData != null && listCtrlTaskData.Count > 0)
+                return listCtrlTaskData[0]?.GetTask();
+            else
+                return null;
         }
 
-        public void Execute(DelOnTaskFinish onTaskFinish)
+        public void Execute(DelOnTaskFinish onTaskFinish,TaskEventData eventData=null)
         {
             if (CurTask == null)
                 onTaskFinish?.Invoke();
             else
-                CurTask?.Execute(onTaskFinish);
+                CurTask?.Execute(onTaskFinish,eventData);
         }
         public void GiveUp()
         {

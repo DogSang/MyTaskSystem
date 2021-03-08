@@ -78,7 +78,7 @@ namespace MyTaskSystem
         //子任务完成回调
         private void OnChildTaskFinish()
         {
-            if (nCurTaskIndex >= arrTask.Length)
+            if (nCurTaskIndex >= arrTask.Length-1)
                 Finsih();
             else
             {
